@@ -28,19 +28,25 @@ namespace videojuegos
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            OdbcConnection miConexion = conectarBD();
-            if (miConexion != null) {
-                String query = String.Format("select juegos.nombre from juegos, escriben where escriben.claveU={0} and escriben.claveJ= juegos.claveJ", Session["claveUnica"].ToString());
-                OdbcCommand cmd = new OdbcCommand(query, miConexion);
-                OdbcDataReader rd = cmd.ExecuteReader();
-                ddJuegos.Items.Clear();
-                //Cada read pasa a la siguiente fila; no necesitas hacer una nueva variable de DataReader
-                while (rd.Read()) {
-                    ddJuegos.Items.Add(rd.GetString(0));
-                }
-                rd.Close();
+            if (!IsPostBack)
+            {
+                OdbcConnection miConexion = conectarBD();
+                if (miConexion != null)
+                {
+                    String query = String.Format("select juegos.nombre from juegos, escriben where escriben.claveU={0} and escriben.claveJ= juegos.claveJ", Session["claveUnica"].ToString());
+                    OdbcCommand cmd = new OdbcCommand(query, miConexion);
+                    OdbcDataReader rd = cmd.ExecuteReader();
+                    ddJuegos.Items.Clear();
+                    //Cada read pasa a la siguiente fila; no necesitas hacer una nueva variable de DataReader
+                    while (rd.Read())
+                    {
+                        ddJuegos.Items.Add(rd.GetString(0));
+                    }
+                    rd.Close();
 
+                }
             }
+            
         }
 
         protected void Button1_Click(object sender, EventArgs e)
